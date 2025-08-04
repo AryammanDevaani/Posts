@@ -40,7 +40,7 @@
     }
 
     .games-grid {
-      display: flex;
+      display: none; /* Hidden by default */
       flex-wrap: wrap;
       gap: 2rem;
       justify-content: center;
@@ -85,7 +85,7 @@
       font-weight: 700;
       color: var(--accent);
       margin-top: 4rem;
-      display: none;
+      display: block; /* Show by default */
     }
   </style>
 </head>
@@ -100,36 +100,26 @@
         “I’ve played this game before,” shut the fuck up!
       </div>
     </div>
-    <!-- Add more .game-card blocks here -->
   </div>
 
   <div class="coming-soon">Coming soon for your device!</div>
 
   <script>
-    function isDesktop() {
-      // Use navigator.userAgentData when available
-      if (navigator.userAgentData) {
-        return navigator.userAgentData.platform === "Windows" ||
-               navigator.userAgentData.platform === "macOS" ||
-               navigator.userAgentData.platform === "Linux";
+    function isRealDesktop() {
+      // First try userAgentData (modern browsers)
+      if (navigator.userAgentData && navigator.userAgentData.platform) {
+        const platform = navigator.userAgentData.platform.toLowerCase();
+        return platform.includes("windows") || platform.includes("mac") || platform.includes("linux");
       }
 
-      // Fallback for older browsers
+      // Fallback: old-school userAgent check
       const ua = navigator.userAgent.toLowerCase();
-      const desktopOS = /(windows nt|macintosh|linux|cros)/i;
-      const mobileIdentifiers = /(android|iphone|ipad|ipod|mobile|tablet)/i;
-
-      // If it's clearly a desktop OS and not a mobile/tablet
-      if (desktopOS.test(ua) && !mobileIdentifiers.test(ua)) {
-        return true;
-      }
-
-      return false;
+      return /windows nt|macintosh|x11|linux/i.test(ua) && !/android|mobile|tablet|ipad|iphone/i.test(ua);
     }
 
-    if (!isDesktop()) {
-      document.querySelector('.games-grid').style.display = 'none';
-      document.querySelector('.coming-soon').style.display = 'block';
+    if (isRealDesktop()) {
+      document.querySelector('.games-grid').style.display = 'flex';
+      document.querySelector('.coming-soon').style.display = 'none';
     }
   </script>
 </body>
