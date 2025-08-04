@@ -60,8 +60,8 @@
     }
 
     #games-button {
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
     }
 
     #profile-button {
@@ -80,7 +80,7 @@
 
 <body>
   <header>AezDez</header>
-  <div id="games-button"><img src="game-image.png" style="width: 120px; height: 120px;"></div>
+  <div id="games-button"><img src="game-image.png" style="width: 150px; height: 150px;"></div>
   <div id="profile-button"><img src="/profile-image.jpg" style="width: 45px; height: 45px;"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
@@ -116,8 +116,8 @@
       const gamesBody = Bodies.rectangle(
         eCenterX - 90,
         eCenterY + 250,
-        60,
-        85,
+        75,
+        106.25,
         { frictionAir: 0.01, restitution: 0.5 }
       );
 
@@ -133,7 +133,7 @@
       const gamesConstraint = Constraint.create({
         pointA: { x: eCenterX, y: eCenterY },
         bodyB: gamesBody,
-        pointB: { x: 0, y: -60 },
+        pointB: { x: 0, y: -75 },
         length: 250,
         stiffness: 0.0005,
         damping: 0.05,
@@ -145,7 +145,7 @@
         bodyB: profileBody,
         pointB: { x: 0, y: -22.5 },
         length: 200,
-        stiffness: 0.00035,
+        stiffness: 0.0003,
         damping: 0.05,
         render: { strokeStyle: '#000', lineWidth: 2 }
       });
@@ -153,8 +153,8 @@
       World.add(world, [gamesBody, profileBody, gamesConstraint, profileConstraint]);
 
       function updatePositions() {
-        const gamesX = gamesBody.position.x - 60;
-        const gamesY = gamesBody.position.y - 60;
+        const gamesX = gamesBody.position.x - 75;
+        const gamesY = gamesBody.position.y - 75;
         gamesButton.style.left = `${gamesX}px`;
         gamesButton.style.top = `${gamesY}px`;
         gamesButton.style.transform = `rotate(${gamesBody.angle}rad)`;
