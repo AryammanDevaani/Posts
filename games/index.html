@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -104,15 +103,34 @@
     <!-- Add more .game-card blocks here -->
   </div>
 
-  <div class="coming-soon">Coming soon on mobile.</div>
+  <div class="coming-soon">Coming soon for your device!</div>
 
   <script>
-    const isMobileOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (isMobileOrTablet) {
+    function isDesktop() {
+      // Use navigator.userAgentData when available
+      if (navigator.userAgentData) {
+        return navigator.userAgentData.platform === "Windows" ||
+               navigator.userAgentData.platform === "macOS" ||
+               navigator.userAgentData.platform === "Linux";
+      }
+
+      // Fallback for older browsers
+      const ua = navigator.userAgent.toLowerCase();
+      const desktopOS = /(windows nt|macintosh|linux|cros)/i;
+      const mobileIdentifiers = /(android|iphone|ipad|ipod|mobile|tablet)/i;
+
+      // If it's clearly a desktop OS and not a mobile/tablet
+      if (desktopOS.test(ua) && !mobileIdentifiers.test(ua)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    if (!isDesktop()) {
       document.querySelector('.games-grid').style.display = 'none';
       document.querySelector('.coming-soon').style.display = 'block';
     }
   </script>
 </body>
-
 </html>
