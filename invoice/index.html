@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dubbing Invoice Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://developer.apple.com/fonts/sf-pro.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 600;
+        }
+
+        .form-section {
+            background: #fff;
+            padding: 20px;
+            margin: auto;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin-top: 10px;
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            touch-action: manipulation;
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .dubbing-row {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            background: #fafafa;
+            position: relative;
+        }
+
+        .dubbing-row:nth-child(even) {
+            background: #f0f4f8;
+        }
+
+        .deleteBtn {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            touch-action: manipulation;
+            display: block;
+            width: 100%;
+            max-width: 120px;
+            margin: 10px auto 0;
+            text-align: center;
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .deleteBtn:hover {
+            background: linear-gradient(135deg, #a93226 0%, #c0392b 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .deleteBtn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== Invoice (captured to PDF) ===== */
+        #invoice {
+            display: none;
+            background: #fff;
+            width: 760px;
+            padding: 32px;
+            margin: auto;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        #invoice header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #invoice header h2 {
+            margin: 0;
+            font-size: 26px;
+            color: #2c3e50;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 600;
+        }
+
+        #invoice header .date {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .section {
+            margin-top: 15px;
+        }
+
+        .section h3 {
+            margin-bottom: 8px;
+            font-size: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 500;
+        }
+
+        .section p {
+            margin: 2px 0;
+            font-size: 12px;
+            white-space: pre-line;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        th {
+            background: #2c3e50;
+            color: #fff;
+            font-size: 13px;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 500;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+            padding: 10px 0 0;
+            font-size: 14px;
+            border-top: 2px solid #2c3e50;
+        }
+
+        .bank,
+        .signature {
+            margin-top: 30px;
+            font-size: 12px;
+        }
+
+        .signature {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 60px;
+            font-size: 14px;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        /* Prevent breaks inside these */
+        table,
+        .bank,
+        .signature,
+        .section {
+            page-break-inside: avoid;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            button {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            .deleteBtn {
+                padding: 8px 14px;
+                font-size: 13px;
+                max-width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Dubbing Invoice Generator</h1>
+    <div class="form-section">
+        <h3>Client Details</h3>
+        <label>Choose Client</label>
+        <select id="clientSelect" onchange="fillClientData()">
+            <option value="new">New Client</option>
+            <option value="subhash">Subhash Studios Pvt Ltd</option>
+        </select>
+
+        <label>Client Name</label>
+        <input id="clientName">
+        <label>Client Contact</label>
+        <input id="clientContact">
+        <label>Client Address</label>
+        <textarea id="clientAddress"></textarea>
+        <label>Client GSTIN</label>
+        <input id="clientGST">
+
+        <h3>Dubbing Work</h3>
+        <div id="dubbingRows"></div>
+        <button type="button" onclick="addRow()">+ Add Dubbing Row</button>
+
+        <button type="button" onclick="generateInvoice()">Generate Invoice PDF</button>
+    </div>
+
+    <!-- ===== Invoice ===== -->
+    <div id="invoice">
+        <header>
+            <h2>Invoice</h2>
+            <div class="date">Date: <span id="invoiceDate"></span></div>
+        </header>
+
+        <div class="section">
+            <h3>From</h3>
+            <p><strong>Jullie Devaani</strong></p>
+            <p>7506242650</p>
+            <p>B-70, Vardhman Nagar,</p>
+            <p>Nursing Lane, Malad West,</p>
+            <p>Mumbai-64</p>
+            <p>jullie.devaani@gmail.com</p>
+        </div>
+
+        <div class="section">
+            <h3>Bill To</h3>
+            <p><strong id="outClientName"></strong></p>
+            <p id="outClientContact"></p>
+            <p id="outClientAddress"></p>
+            <p id="outClientGST"></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Dubbing Date</th>
+                    <th>Series/Movie</th>
+                    <th>Characters</th>
+                    <th>Director</th>
+                    <th>Episodes</th>
+                    <th>Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody id="invoiceTable"></tbody>
+        </table>
+
+        <div class="total">Total: ₹<span id="outTotal"></span></div>
+
+        <div class="bank">
+            <strong>Bank Details:</strong><br>
+            Bank of Baroda<br>
+            A/C No: 99730100000419<br>
+            IFSC: BARB0DBMONT<br>
+            Branch: Mount Poinsur<br>
+            UPI No: 7506242650
+        </div>
+
+        <div class="signature">Jullie Devaani</div>
+    </div>
+
+    <script>
+        const clientData = {
+            subhash: {
+                name: "Subhash Studios Pvt Ltd",
+                address:
+                    "201, Nimbus Centre, Plot Number 69,\nOberoi Complex, Near Laxmi Industrial Estate,\nAndheri West, Mumbai-53, Maharashtra",
+                contact: "9930405505",
+                gst: "27AABCS1126R1Z3"
+            }
+        };
+
+        function getValueOrDash(el) { return el.value.trim() || "-"; }
+
+        function fillClientData() {
+            const sel = document.getElementById("clientSelect").value;
+            if (sel === "subhash") {
+                document.getElementById("clientName").value = clientData.subhash.name;
+                document.getElementById("clientContact").value = clientData.subhash.contact;
+                document.getElementById("clientAddress").value = clientData.subhash.address;
+                document.getElementById("clientGST").value = clientData.subhash.gst;
+            } else {
+                document.getElementById("clientName").value = "";
+                document.getElementById("clientContact").value = "";
+                document.getElementById("clientAddress").value = "";
+                document.getElementById("clientGST").value = "";
+            }
+        }
+
+        function createRow(isFirst = false) {
+            const row = document.createElement("div");
+            row.classList.add("dubbing-row");
+            row.innerHTML = `
+    <label>Dubbing Date <span style="color:red">*</span></label>
+    <input type="date" class="dubDate" required>
+    <label>Series/Movie Name</label>
+    <input class="seriesName">
+    <label>Characters Voiced</label>
+    <input class="characters">
+    <label>Dubbing Director</label>
+    <input class="director">
+    <label>Episode Numbers</label>
+    <input class="episodes">
+    <label>Amount (₹)</label>
+    <input type="number" class="amount">
+  `;
+            if (!isFirst) {
+                const btn = document.createElement("button");
+                btn.textContent = "Delete";
+                btn.className = "deleteBtn";
+                btn.onclick = () => row.remove();
+                row.appendChild(btn);
+            }
+            return row;
+        }
+
+        function addRow() {
+            document.getElementById("dubbingRows").appendChild(createRow());
+        }
+
+        function fillInvoiceTable() {
+            const table = document.getElementById("invoiceTable");
+            table.innerHTML = "";
+            let total = 0;
+            const rows = document.querySelectorAll("#dubbingRows .dubbing-row");
+            for (let r of rows) {
+                const dateEl = r.querySelector(".dubDate");
+                if (!dateEl.value.trim()) {
+                    alert("All dubbing rows must have a date filled in.");
+                    return false;
+                }
+                const date = dateEl.value;
+                const series = getValueOrDash(r.querySelector(".seriesName"));
+                const chars = getValueOrDash(r.querySelector(".characters"));
+                const dir = getValueOrDash(r.querySelector(".director"));
+                const eps = getValueOrDash(r.querySelector(".episodes"));
+                const amt = r.querySelector(".amount").value.trim() || "-";
+                if (amt !== "-") total += parseFloat(amt);
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${date}</td><td>${series}</td><td>${chars}</td><td>${dir}</td><td>${eps}</td><td>${amt}</td>`;
+                table.appendChild(tr);
+            }
+            document.getElementById("outTotal").textContent = total.toFixed(2);
+            return true;
+        }
+
+        async function generateInvoice() {
+            if (!fillInvoiceTable()) return;
+
+            document.getElementById("invoiceDate").textContent =
+                new Date().toLocaleDateString("en-IN");
+            document.getElementById("outClientName").textContent =
+                getValueOrDash(document.getElementById("clientName"));
+            document.getElementById("outClientContact").textContent =
+                getValueOrDash(document.getElementById("clientContact"));
+            document.getElementById("outClientAddress").textContent =
+                getValueOrDash(document.getElementById("clientAddress"));
+            document.getElementById("outClientGST").textContent =
+                getValueOrDash(document.getElementById("clientGST"));
+
+            const el = document.getElementById("invoice");
+            el.style.display = "block";
+            await new Promise(r => requestAnimationFrame(r));
+
+            const opt = {
+                filename: "dubbing_invoice.pdf",
+                margin: [10, 10, 10, 10],
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
+                jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
+                pagebreak: { mode: ["css", "legacy"] }
+            };
+
+            await html2pdf().set(opt).from(el).save();
+        }
+
+        // On load: add one compulsory row
+        window.onload = () => {
+            document.getElementById("dubbingRows").appendChild(createRow(true));
+        };
+    </script>
+
+</body>
+
+</html>
