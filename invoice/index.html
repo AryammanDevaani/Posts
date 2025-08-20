@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Dubbing Invoice</title>
+    <title>dubbing invoice</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://developer.apple.com/fonts/sf-pro.css">
@@ -15,13 +15,13 @@
         }
 
         body {
-            font-family: 'SF Pro Text', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'SF Pro', 'Inter', sans-serif;
         }
 
         h1 {
-            font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'SF Pro', 'Inter', sans-serif;
+            text-align: center;
         }
-
 
         .form-section {
             background: #ffffff;
@@ -73,7 +73,6 @@
             margin-top: 20px;
             font-size: 16px;
             font-weight: 600;
-            text-transform: uppercase;
             letter-spacing: 0.8px;
             transition: all 0.3s ease;
             width: 100%;
@@ -323,29 +322,29 @@
 
 <body>
 
-    <h1>Dubbing Invoice</h1>
+    <h1>dubbing invoice</h1>
     <div class="form-section">
-        <h3>Client Details</h3>
-        <label>Choose Client</label>
+        <h3>client details</h3>
+        <label>choose client</label>
         <select id="clientSelect" onchange="fillClientData()">
-            <option value="new">New Client</option>
+            <option value="new">new client</option>
             <option value="subhash">Subhash Studios Private Limited</option>
         </select>
 
-        <label>Client Name</label>
+        <label>client name</label>
         <input id="clientName">
-        <label>Client Contact</label>
+        <label>client contact</label>
         <input type="number" id="clientContact">
-        <label>Client Address</label>
+        <label>client address</label>
         <textarea id="clientAddress"></textarea>
-        <label>Client GSTIN</label>
+        <label>client GSTIN</label>
         <input id="clientGST">
 
-        <h3>Dubbing Work</h3>
+        <h3>dubbing work</h3>
         <div id="dubbingRows"></div>
-        <button type="button" onclick="addRow()">Add Dub</button>
+        <button type="button" onclick="addRow()">add dub</button>
 
-        <button type="button" onclick="generateInvoice()">Generate Invoice</button>
+        <button type="button" onclick="generateInvoice()">generate invoice</button>
     </div>
 
     <div id="invoice">
@@ -431,17 +430,17 @@
             const row = document.createElement("div");
             row.classList.add("dubbing-row");
             row.innerHTML = `
-                <label>Dubbing Date <span style="color:red">*</span></label>
+                <label>dubbing date <span style="color:red">*</span></label>
                 <input type="date" class="dubDate" required>
-                <label>Series/Movie Name</label>
+                <label>series/movie name</label>
                 <input class="seriesName">
-                <label>Characters Voiced</label>
+                <label>characters voiced</label>
                 <input class="characters">
-                <label>Dubbing Director</label>
+                <label>dubbing director</label>
                 <input class="director">
-                <label>Episode Numbers</label>
+                <label>episode numbers</label>
                 <input class="episodes">
-                <label>Amount (₹)</label>
+                <label>amount (₹)</label>
                 <input type="number" class="amount">
             `;
             if (!isFirst) {
