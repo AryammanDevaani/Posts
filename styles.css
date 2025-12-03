@@ -34,6 +34,21 @@ header {
   letter-spacing: 0.5px;
 }
 
+/* Tweet screenshots layout */
+.tweets {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.tweet-img {
+  width: min(90vw, 480px);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
 footer {
   position: absolute;
   bottom: 1.5rem;
