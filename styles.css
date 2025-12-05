@@ -21,15 +21,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100dvh;
+  justify-content: center; 
+  min-height: 100dvh;    
   text-align: center;
   position: relative;
-  padding-bottom: 4rem;
 }
-/* Tweet screenshots layout */
+
 .tweets {
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
