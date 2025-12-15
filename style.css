@@ -27,13 +27,13 @@ body {
   position: relative;
 }
 
-.tweets {
+.posts {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.tweet-img {
+.post-img {
   width: min(90vw, 480px);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
